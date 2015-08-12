@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Mission>
+  <MetaInfo>
+    <Name>Cargo Raid</Name>
+    <Info></Info>
+    <Enabled>true</Enabled>
+    <CameraPos x="-154.1309" y="-2358.141" z="123.7619"/>
+    <RequiredIPL>
+      <IPL remove="true">sunkcargoship</IPL>
+      <IPL>cargoship</IPL>
+    </RequiredIPL>
+    <Area>
+      <Point x="-254.8467" y="-2350.453"/>
+      <Point x="-259.3365" y="-2381.806"/>
+      <Point x="-107.6345" y="-2379.858"/>
+      <Point x="-75.61098" y="-2376.635"/>
+      <Point x="-77.03591" y="-2352.676"/>
+    </Area>
+  </MetaInfo>
+  <EntryPoints>
+    <EntryPoint type="rappel">
+      <Name>Helicopter</Name>
+      <Helipad x="311.313" y="-1466" z="46.9"/>
+      <Destination x="-92.5652" y="-2362.343" z="31.9"/>
+    </EntryPoint>
+    <EntryPoint type="teleport">
+      <Name>Boat</Name>
+      <Position x="-249.4635" y="-2366.84" z="9.319" heading="-180"/>
+    </EntryPoint>
+  </EntryPoints>
+  <Enemies max="15">
+    <Enemy x="-129.72" y="-2366.27" z="9.32" heading="0.6" />
+    <Enemy x="-123.72" y="-2366.27" z="9.32" heading="181" />
+    <Enemy x="-147.54" y="-2365.27" z="9.32" heading="262" />
+    <Enemy x="-163.66" y="-2359.27" z="9.32" heading="7" />
+    <Enemy x="-163.66" y="-2372.27" z="9.32" heading="177" />
+    <Enemy x="-182.41" y="-2371.16" z="9.32" heading="192" />
+    <Enemy x="-181.52" y="-2358.9" z="9.32" heading="2" />
+    <Enemy x="-193.31" y="-2373.94" z="9.32" heading="246" />
+    <Enemy x="-193.31" y="-2356.93" z="9.32" heading="290" />
+    <Enemy x="-210.28" y="-2357.99" z="9.32" heading="195" />
+    <Enemy x="-209.28" y="-2372.84" z="9.32" heading="356.76" />
+    <Enemy x="-222.63" y="-2376.762" z="13.33" heading="246" />
+    <Enemy x="-211.39" y="-2367.043" z="17.332" heading="257.83" />
+    <Enemy x="-224.3578" y="-2374.831" z="21.32809" heading="223.3768" />
+    <Enemy x="-222.5208" y="-2357.251" z="21.32809" heading="21.03654" />
+    <Enemy x="-229.3946" y="-2378.982" z="13.33286" heading="131.6226"/>
+    <Enemy x="-232.0218" y="-2377.229" z="17.33264" heading="96.97691"/>
+    <Enemy x="-212.2656" y="-2377.596" z="17.3326" heading="265.1254"/>
+    <Enemy x="-211.3956" y="-2366.27" z="17.33261" heading="269.3624"/>
+    <Enemy x="-232.005" y="-2354.697" z="17.3326" heading="77.58912"/>
+    <Enemy x="-227.8046" y="-2353.861" z="13.33287" heading="99.07516"/>
+    <Enemy x="-231.1901" y="-2364.396" z="25.33036" heading="87.20172"/>
+    <Enemy x="-222.6998" y="-2368.222" z="29.68021" heading="160.0042"/>
+    <Enemy x="-188.8076" y="-2365.746" z="9.319202" heading="87.69778"/>
+    <Enemy x="-193.4635" y="-2373.885" z="11.96662" heading="287.7825"/>
+    <Enemy x="-193.4314" y="-2354.922" z="11.9666" heading="273.741"/>
+    <Enemy x="-178.4024" y="-2378.721" z="11.96659" heading="92.58829"/>
+    <Enemy x="-178.4729" y="-2353.79" z="11.97085" heading="59.36706"/>
+    <Enemy x="-145.549" y="-2377.079" z="11.96659" heading="94.08987"/>
+    <Enemy x="-145.6682" y="-2355.304" z="11.96659" heading="72.45205"/>
+  </Enemies>
+  <Bombs time="180">
+    <Bomb x="-161.9595" y="-2367.265" z="9.319201" heading="100.872"/>
+    <Bomb x="-187.9138" y="-2363.988" z="9.319202" heading="301.5595"/>
+    <Bomb x="-184.3682" y="-2367.725" z="9.319263" heading="104.072"/>
+    <Bomb x="-212.2479" y="-2367.779" z="9.319212" heading="266.289"/>
+    <Bomb x="-233.0715" y="-2366.065" z="17.33263" heading="177.4187"/>
+    <Bomb x="-218.0397" y="-2364.947" z="29.68519" heading="89.30266"/>
+  </Bombs>
+  <DecorativeVehicles>
+    <Vehicle model="Dinghy2" x="-253.971" y="-2367.186" z="-0.89" heading="185.44" spawn="1"/>
+  </DecorativeVehicles>
+</Mission>

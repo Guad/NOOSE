@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Mission>
+  <MetaInfo>
+    <Name>Bikers Hideout</Name>
+    <Info></Info>
+    <Enabled>true</Enabled>
+    <CameraPos x="62.32937" y="3688.641" z="240.0916"/>
+    <Area>
+      <Point x="108.6711" y="3590.257" />
+      <Point x="19.1573" y="3619.329" />
+      <Point x="6.118874" y="3648.544" />
+      <Point x="-14.11297" y="3707.153" />
+      <Point x="-23.19272" y="3733.654" />
+      <Point x="52.40665" y="3772.865" />
+      <Point x="95.56727" y="3772.645" />
+      <Point x="123.9007" y="3768.601" />
+      <Point x="149.8831" y="3693.077"/>
+      <Point x="149.7272" y="3635.244"/>
+      <Point x="127.4974" y="3585.082" />
+    </Area>
+  </MetaInfo>
+  <EntryPoints>
+    <EntryPoint type="teleport">
+      <Name>Front</Name>
+      <Position x="81.6684" y="3596.262" z="39.72292" heading="5.505774"/>
+    </EntryPoint>
+    <EntryPoint type="teleport">
+      <Name>Boat</Name>
+      <Position x="174.202" y="3660.264" z="31.36626" heading="92.35931"/>
+    </EntryPoint>
+    <EntryPoint type="rappel">
+      <Name>Helicopter</Name>
+      <Helipad x="1775.372" y="3275.426" z="41.18471"/>
+      <Destination x="-23.28014" y="3666.868" z="54.55974"/>
+    </EntryPoint>
+  </EntryPoints>
+  <Enemies max="17">
+    <Enemy x="62.58003" y="3700.969" z="39.7524" heading="289.8477"/>
+    <Enemy x="91.92983" y="3654.449" z="39.74388" heading="34.77454"/>
+    <Enemy x="67.61897" y="3675.436" z="39.76532" heading="326.0219"/>
+    <Enemy x="98.16881" y="3682.752" z="39.73776" heading="5.856383"/>
+    <Enemy x="117.2833" y="3703.449" z="39.75488" heading="96.46883"/>
+    <Enemy x="96.46419" y="3750.036" z="40.71968" heading="70.04143"/>
+    <Enemy x="85.35601" y="3755.257" z="39.74879" heading="149.8801"/>
+    <Enemy x="69.51298" y="3754.914" z="39.74929" heading="214.5323"/>
+    <Enemy x="70.18118" y="3712.798" z="39.7549" heading="203.9001"/>
+    <Enemy x="65.81231" y="3709.363" z="39.7549" heading="279.8794"/>
+    <Enemy x="63.15934" y="3704.505" z="39.75417" heading="242.0861"/>
+    <Enemy x="78.72857" y="3706.001" z="41.07718" heading="58.55828"/>
+    <Enemy x="60.91844" y="3685.756" z="39.83436" heading="149.5077"/>
+    <Enemy x="59.90141" y="3684.073" z="39.83515" heading="326.8655"/>
+    <Enemy x="30.65238" y="3735.312" z="40.6284" heading="160.7324"/>
+    <Enemy x="11.03842" y="3721.307" z="39.60819" heading="220.8827"/>
+    <Enemy x="17.23168" y="3687.375" z="39.69389" heading="216.4489"/>
+    <Enemy x="35.82707" y="3652.298" z="39.75444" heading="81.87368"/>
+    <Enemy x="46.90012" y="3643.49" z="39.74081" heading="318.9129"/>
+    <Enemy x="34.57682" y="3655.369" z="39.75266" heading="288.7031"/>
+    <Enemy x="12.92126" y="3734.036" z="39.9876" heading="259.7901"/>
+    <Enemy x="38.15977" y="3753.591" z="39.62533" heading="218.6285"/>
+    <Enemy x="54.79488" y="3686.566" z="39.82391" heading="68.09869"/>
+  </Enemies>
+  <Bombs time="180">
+    <Bomb x="33.71642" y="3657.348" z="39.7507" heading="155.9712"/>
+    <Bomb x="20.52106" y="3693.564" z="39.63588" heading="56.18645"/>
+    <Bomb x="11.16787" y="3699.69" z="39.62934" heading="138.6107"/>
+    <Bomb x="13.83108" y="3717.256" z="39.60444" heading="105.2227"/>
+    <Bomb x="66.54145" y="3759.17" z="39.7323" heading="27.02875"/>
+    <Bomb x="79.03054" y="3706.773" z="41.07722" heading="82.25441"/>
+    <Bomb x="97.70032" y="3683.536" z="39.72295" heading="5.030112"/>
+    <Bomb x="106.9041" y="3673.774" z="39.75489" heading="18.63264"/>
+  </Bombs>
+  <DecorativeVehicles>
+    <Vehicle model="Dinghy2" x="181.5672" y="3660.32" z="30.12024" heading="45.93738" spawn="1"/>
+    <Vehicle model="Riot" x="82.67315" y="3587.149" z="39.50804" heading="189.9479" spawn="0" siren="true" doors="0011"/>
+    <Vehicle model="Police" x="7.751782" y="3601.629" z="40.11242" heading="174.1431" spawn="-1" siren="true" />
+    <Vehicle model="Police" x="101.9914" y="3569.195" z="39.39557" heading="284.9213" spawn="-1" siren="true"/>
+  </DecorativeVehicles>
+</Mission>
