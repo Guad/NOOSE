@@ -11,6 +11,8 @@ using NativeUI;
 using Control = GTA.Control;
 using System.IO;
 using System.Xml;
+using MapEditor;
+using MapEditor.API;
 
 namespace NOOSE
 {
@@ -234,6 +236,7 @@ namespace NOOSE
             _squadMenu.MouseEdgeEnabled = false;
             _squadMenu.ResetKey(UIMenu.MenuControls.Back);
             _squadMenu.SetKey(UIMenu.MenuControls.Back, Control.FrontendCancel);
+            _squadMenu.FormatDescriptions = false;
 
             // Load Mission XMLs
             LoadMissions();
@@ -244,7 +247,83 @@ namespace NOOSE
                 Function.Call((Hash)0x0888C3502DBBEEF5);
                 Function.Call(Hash._0x9BAE5AD2508DF078, 1);
             }
-        }
+
+			if (File.Exists("scripts\\MapEditor.dll"))
+				AttachMapEditor();
+		}
+
+	    private void AttachMapEditor()
+	    {
+		    var thisMod = new ModListener()
+		    {
+				ButtonString = "Create a NOOSE Mission",
+				Description = "Create a mission for the NOOSE mod.",
+				Name = "NOOSE",
+		    };
+			ModManager.SuscribeMod(thisMod);
+		    thisMod.OnMapSaved += SaveMission;
+	    }
+
+	    private void SaveMission(Map map, string filename)
+	    {
+		    if (filename.EndsWith(".xml"))
+			    filename = filename.Replace(".xml", "");
+			// Prog. Note: I know this fucking horrible but that's what you get when you use a XML parser written at 5 AM.
+			
+		    string nl = "\r\n";
+		    string output = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + nl;
+		    output += "<Mission>" + nl;
+		    output += "\t<MetaInfo>" + nl;
+		    output += "\t\t<Name>" + filename + "</Name>" + nl;
+		    output += "\t\t<Info></Info>" + nl;
+		    output += "\t\t<Enabled>true</Enabled>" + nl;
+		    var firstProp = map.Objects.First(obj => obj.Type == ObjectTypes.Prop);
+		    output += $"\t\t<CameraPos x=\"{firstProp.Position.X}\" y=\"{firstProp.Position.Y}\" z=\"{firstProp.Position.Z}\" />" + nl;
+		    output += "\t</MetaInfo>" + nl;
+		    output += "\t<EntryPoints>" + nl;
+		    foreach (Marker marker in map.Markers)
+		    {
+				if(marker.Type == MarkerType.PlaneModel) continue;
+			    string type = marker.Type == MarkerType.HorizontalCircleSkinny_Arrow ? "teleport" : "rappel";
+			    output += $"\t\t<EntryPoint type=\"{type}\">" + nl;
+			    if (type == "teleport")
+			    {
+				    output += "\t\t\t<Name>Front</Name>" + nl;
+				    output += $"\t\t\t<Position x=\"{marker.Position.X}\" y=\"{marker.Position.Y}\" z=\"{marker.Position.Z}\" heading=\"{marker.Rotation.Z}\"/>" + nl;
+			    }
+				else
+			    {
+				    output += "\t\t\t<Name>Helicopter</Name>" + nl;
+				    output += $"\t\t\t<Destination x=\"{marker.Position.X}\" y=\"{marker.Position.Y}\" z=\"{marker.Position.Z + 15}\"/>" + nl;
+					output += $"\t\t\t<Helipad x=\"{map.Markers.First(x => x.Type == MarkerType.PlaneModel).Position.X}\" y=\"{map.Markers.First(x => x.Type == MarkerType.PlaneModel).Position.Y}\" z=\"{map.Markers.First(x => x.Type == MarkerType.PlaneModel).Position.Z}\"/>" + nl;
+                }
+			    output += "\t\t</EntryPoint>" + nl;
+		    }
+		    output += "\t</EntryPoints>" + nl;
+		    output += "\t<Enemies>" + nl;
+		    foreach (MapObject o in map.Objects.Where(obj => obj.Type == ObjectTypes.Ped))
+		    {
+			    output += $"\t\t<Enemy x=\"{o.Position.X}\" y=\"{o.Position.Y}\" z=\"{o.Position.Z}\" heading=\"{o.Rotation.Z}\"/>" + nl;
+		    }
+		    output += "\t</Enemies>" + nl;
+		    if (map.Objects.Count(obj => obj.Type == ObjectTypes.Prop) > 1)
+		    {
+			    output += "\t<Bombs time=\"180\">" + nl;
+			    output = map.Objects.Where(obj => obj.Type == ObjectTypes.Prop).Skip(1).Aggregate(output, (current, o) => current + ($"\t\t<Bomb x=\"{o.Position.X}\" y=\"{o.Position.Y}\" z=\"{o.Position.Z + 0.5f}\" heading=\"{o.Rotation.Z}\"/>" + nl));
+			    output += "\t</Bombs>" + nl;
+		    }
+		    output += "\t<DecorativeVehicles>" + nl;
+		    foreach (MapObject o in map.Objects.Where(x => x.Type == ObjectTypes.Vehicle))
+		    {
+			    var name = MapEditor.ObjectDatabase.VehicleDb.First(pair => pair.Value == o.Hash);
+			    output += $"\t<Vehicle model=\"{name.Key}\" x=\"{o.Position.X}\" y=\"{o.Position.Y}\" z=\"{o.Position.Z}\" heading=\"{o.Rotation.Z}\" spawn=\"-1\" doors=\"0000\" siren=\"{o.SirensActive}\" />" + nl;
+            }
+		    output += "\t</DecorativeVehicles>" + nl;
+		    output += "</Mission>";
+		    var path = "scripts\\NOOSEMissions\\" + filename + ".xml";
+            File.WriteAllText(path, output);
+		    UI.Notify("Mission saved to " + path);
+	    }
 
         private static float ParseFloat(string s)
         {
@@ -519,17 +598,17 @@ namespace NOOSE
 
                 MissionObjectives.Clear();
                 // 0 - in progress, 1 - complete, 2 - failed
-                MissionObjectives.Add(new Tuple<string, int>("~h~Objectives~h~~s~~w~", 0));
+                MissionObjectives.Add(new Tuple<string, int>("~h~Objectives~h~~s~~w~\n", 0));
                 if (_selectedGamemode == Gamemodes.TargetElimination)
                 {
-                    MissionObjectives.Add(new Tuple<string, int>("Neutralize all targets", 0));
-                    MissionObjectives.Add(new Tuple<string, int>("Minimize civilian casualties\n\n", 0));
+                    MissionObjectives.Add(new Tuple<string, int>("Neutralize all targets\n", 0));
+                    MissionObjectives.Add(new Tuple<string, int>("Minimize civilian casualties", 0));
                 }
                 if (_selectedGamemode == Gamemodes.BombDefusal)
                 {
-                    MissionObjectives.Add(new Tuple<string, int>("Neutralize all targets", 0));
-                    MissionObjectives.Add(new Tuple<string, int>("Minimize civilian casualties", 0));
-                    MissionObjectives.Add(new Tuple<string, int>("Defuse the bomb\n\n", 0));
+                    MissionObjectives.Add(new Tuple<string, int>("Neutralize all targets\n", 0));
+                    MissionObjectives.Add(new Tuple<string, int>("Minimize civilian casualties\n", 0));
+                    MissionObjectives.Add(new Tuple<string, int>("Defuse the bomb", 0));
                 }
             }
             finally
@@ -547,6 +626,9 @@ namespace NOOSE
             _currentMission?.OnEndMission();
             RemoveMates();
             _currentMission = null;
+            _killedEnemies = 0;
+            _killedCivs?.Clear();
+            _woundedCivs?.Clear();
             World.RenderingCamera = null;
             Game.Nightvision = false;
             if(_squadMenu.Visible) _squadMenu.Visible = false;
@@ -780,17 +862,17 @@ namespace NOOSE
 
                 MissionObjectives.Clear();
                 // 0 - in progress, 1 - complete, 2 - failed
-                MissionObjectives.Add(new Tuple<string, int>("~h~Objectives~h~~s~~w~", 0));
+                MissionObjectives.Add(new Tuple<string, int>("~h~Objectives~h~~s~~w~\n", 0));
                 if (_selectedGamemode == Gamemodes.TargetElimination)
                 {
-                    MissionObjectives.Add(new Tuple<string, int>("Neutralize all targets", _currentMission.BadGuys.Count == 0 ? 1 : 0));
-                    MissionObjectives.Add(new Tuple<string, int>("Minimize civilian casualties\n\n", _woundedCivs.Count == 0 ? 1 : 2));
+                    MissionObjectives.Add(new Tuple<string, int>("Neutralize all targets\n", _currentMission.BadGuys.Count == 0 ? 1 : 0));
+                    MissionObjectives.Add(new Tuple<string, int>("Minimize civilian casualties", _woundedCivs.Count == 0 ? 1 : 2));
                 }
                 if (_selectedGamemode == Gamemodes.BombDefusal)
                 {
-                    MissionObjectives.Add(new Tuple<string, int>("Neutralize all targets", _currentMission.BadGuys.Count == 0 ? 1 : 0));
-                    MissionObjectives.Add(new Tuple<string, int>("Minimize civilian casualties", _woundedCivs.Count == 0 ? 1 : 2));
-                    MissionObjectives.Add(new Tuple<string, int>("Defuse the bomb\n\n", _currentMission.BombDefused ? 1 : 0));
+                    MissionObjectives.Add(new Tuple<string, int>("Neutralize all targets\n", _currentMission.BadGuys.Count == 0 ? 1 : 0));
+                    MissionObjectives.Add(new Tuple<string, int>("Minimize civilian casualties\n", _woundedCivs.Count == 0 ? 1 : 2));
+                    MissionObjectives.Add(new Tuple<string, int>("Defuse the bomb", _currentMission.BombDefused ? 1 : 0));
                 }
 
                 foreach (UIMenuItem item in _squadMenu.MenuItems)
@@ -803,7 +885,7 @@ namespace NOOSE
                             : tuple.Item2 == 1
                                 ? "~g~"
                                 : "~r~";
-                        output += tuple.Item1 + "~n~";
+                        output += tuple.Item1;
                     }
                     item.Description = output;
                 }
@@ -901,7 +983,8 @@ namespace NOOSE
                     int score = 100;
                     if (!noCivDamage) score -= 10;
                     if (!noTeamDamage) score -= 20;
-                    if (civKilled > 10) score -= 30;
+                    _killedCivs.ForEach(x => score -= 10);
+                    _woundedCivs.ForEach(x => score -= 5);
 
                     var tmpMiss = new MissionPassedScreen(_currentMission.MissionName, score,
                         score > 70
