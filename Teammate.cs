@@ -17,6 +17,7 @@ namespace NOOSE
             World.SetRelationshipBetweenGroups(Relationship.Hate, NOOSEGroup, Enemy.EnemyGroup);
             World.SetRelationshipBetweenGroups(Relationship.Hate, Enemy.EnemyGroup, NOOSEGroup);
 
+            
             var swatmodel = new Model(PedHash.Swat01SMY);
             int counter = 0;
             do
@@ -31,6 +32,8 @@ namespace NOOSE
             Character.Armor = 200;
             Character.RelationshipGroup = NOOSEGroup;
             Character.AlwaysDiesOnLowHealth = false;
+            Function.Call(Hash.REMOVE_PED_FROM_GROUP, Character.Handle);
+            Function.Call(Hash.SET_PED_AS_GROUP_MEMBER, Character.Handle, Function.Call<int>(Hash.GET_PED_GROUP_INDEX, Game.Player.Character.Handle));
         }
     }
 }

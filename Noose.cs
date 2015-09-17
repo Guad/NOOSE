@@ -279,24 +279,46 @@ namespace NOOSE
 		    output += "\t\t<Enabled>true</Enabled>" + nl;
 		    var firstProp = map.Objects.First(obj => obj.Type == ObjectTypes.Prop);
 		    output += $"\t\t<CameraPos x=\"{firstProp.Position.X}\" y=\"{firstProp.Position.Y}\" z=\"{firstProp.Position.Z}\" />" + nl;
+		    if (map.Markers.Any(x => x.Type == MarkerType.DebugSphere))
+		    {
+			    output += "\t\t<Area>" + nl;
+			    output = map.Markers.Where(x => x.Type == MarkerType.DebugSphere).Aggregate(output, (current, marker) => current + ($"\t\t\t<Point x=\"{marker.Position.X}\" y=\"{marker.Position.Y}\"/>" + nl));
+                output += "\t\t</Area>" + nl;
+		    }
 		    output += "\t</MetaInfo>" + nl;
 		    output += "\t<EntryPoints>" + nl;
 		    foreach (Marker marker in map.Markers)
 		    {
-				if(marker.Type == MarkerType.PlaneModel) continue;
-			    string type = marker.Type == MarkerType.HorizontalCircleSkinny_Arrow ? "teleport" : "rappel";
+			    string type = marker.Type == MarkerType.HorizontalCircleSkinny_Arrow
+				    ? "teleport"
+				    : marker.Type == MarkerType.ThickChevronUp
+					    ? "rappel"
+					    : marker.Type == MarkerType.CheckeredFlagRect ? "plane" : "unknown";
+				if(type == "unknown") continue;
 			    output += $"\t\t<EntryPoint type=\"{type}\">" + nl;
-			    if (type == "teleport")
+			    switch (type)
 			    {
-				    output += "\t\t\t<Name>Front</Name>" + nl;
-				    output += $"\t\t\t<Position x=\"{marker.Position.X}\" y=\"{marker.Position.Y}\" z=\"{marker.Position.Z}\" heading=\"{marker.Rotation.Z}\"/>" + nl;
+				    case "teleport":
+					    output += "\t\t\t<Name>Front</Name>" + nl;
+					    output += $"\t\t\t<Position x=\"{marker.Position.X}\" y=\"{marker.Position.Y}\" z=\"{marker.Position.Z}\" heading=\"{marker.Rotation.Z}\"/>" + nl;
+					    break;
+				    case "rappel":
+					    output += "\t\t\t<Name>Helicopter</Name>" + nl;
+					    output += $"\t\t\t<Destination x=\"{marker.Position.X}\" y=\"{marker.Position.Y}\" z=\"{marker.Position.Z + 15}\"/>" + nl;
+					    output += $"\t\t\t<Helipad x=\"{map.Markers.First(x => x.Type == MarkerType.UpsideDownCone).Position.X}\" y=\"{map.Markers.First(x => x.Type == MarkerType.UpsideDownCone).Position.Y}\" z=\"{map.Markers.First(x => x.Type == MarkerType.UpsideDownCone).Position.Z}\"/>" + nl;
+					    break;
+				    case "plane":
+					    output += "\t\t\t<Name>Plane</Name>" + nl;
+					    var planeSpawn = map.Markers.First(x => x.Type == MarkerType.PlaneModel);
+					    var approach = map.Markers.First(x => x.Type == MarkerType.VerticleCircle);
+					    var rwyStart = map.Markers.First(x => x.Type == MarkerType.ChevronUpx3);
+                        output += $"\t\t\t<PlaneSpawn x=\"{planeSpawn.Position.X}\" y=\"{planeSpawn.Position.Y}\" z=\"{planeSpawn.Position.Z}\"/>" + nl;
+						output += "\t\t\t<PlaneHeading>" + (planeSpawn.Rotation.Z - 180f) + "</PlaneHeading>" + nl;
+					    output += $"\t\t\t<Approach x=\"{approach.Position.X}\" y=\"{approach.Position.Y}\" z=\"{approach.Position.Z}\"/>" + nl;
+						output += $"\t\t\t<RunwayStart x=\"{rwyStart.Position.X}\" y=\"{rwyStart.Position.Y}\" z=\"{rwyStart.Position.Z}\"/>" + nl;
+						output += $"\t\t\t<RunwayEnd x=\"{marker.Position.X}\" y=\"{marker.Position.Y}\" z=\"{marker.Position.Z}\"/>" + nl;
+                        break;
 			    }
-				else
-			    {
-				    output += "\t\t\t<Name>Helicopter</Name>" + nl;
-				    output += $"\t\t\t<Destination x=\"{marker.Position.X}\" y=\"{marker.Position.Y}\" z=\"{marker.Position.Z + 15}\"/>" + nl;
-					output += $"\t\t\t<Helipad x=\"{map.Markers.First(x => x.Type == MarkerType.PlaneModel).Position.X}\" y=\"{map.Markers.First(x => x.Type == MarkerType.PlaneModel).Position.Y}\" z=\"{map.Markers.First(x => x.Type == MarkerType.PlaneModel).Position.Z}\"/>" + nl;
-                }
 			    output += "\t\t</EntryPoint>" + nl;
 		    }
 		    output += "\t</EntryPoints>" + nl;
@@ -754,7 +776,7 @@ namespace NOOSE
 
             if (_squadMenu.Visible)
             {
-                _squadMenu.DisEnableControls(false);
+                UIMenu.DisEnableControls(false);
                 Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)GTA.Control.Attack);
                 Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)GTA.Control.Aim);
                 Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)GTA.Control.Jump);

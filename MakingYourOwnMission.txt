@@ -1,101 +1,23 @@
 ﻿# Introduction
-It's very easy to make and add missions to NOOSE mod. I included a coordinate recorder activated by NumPad Dot (Decimal) which will create a file in NOOSEMissions\Coordinates.txt
-The missions have a XML syntax. All of the elements must be wrapped in a root tag, <Mission></Mission>.
-Then we have 4 elements inside: MetaInfo, EntryPoints, Enemies and DecorativeVehicles.
+Making missions for NOOSE mod is very easy with the Map Editor mod. Just follow the steps and you will be done in no time!
 
-# MetaInfo
-This is the section which contains data about the mission itself (metadata).
-Things like
-* Name
-* Info
-* Enabled (true/false)
-* CameraPos - defines the camera position when selecting the missions.
-* RequiredIPL - if your mission needs any IPL to load. This is optional.
-<RequiredIPL>
-	<IPL remove="true">cargoboat</IPL> <- This IPL will be removed while the mission is active, and then re-added when the mission ends.
-	<IPL>anotherOne</IPL>
-</RequiredIPL>
-* Area - a polygon defining the combat area of your mission. This is optional. It has a list of Point tags with x and y attributes, they define the polygon vertices.
-Try to keep the polygon as simple as possible.
-<Area>
-	<Point x="121" y="1521"/>
-	<Point x="124" y="4124"/>
-	<Point x="121" y="1521"/>
-	<Point x="124" y="4124"/>
-</Area>
+# Map Editor
+Grab the editor here:
+https://www.gta5-mods.com/scripts/map-editor
 
-# EntryPoints
-This section defines the entry points of the mission. You can have as many entry points as you want.
-There are 3 types of entry points:
- - teleport: Instantly teleports the player to the coordinates.
- - rappel: Player spawns in a helicopter and then flies to the coordinates and rappels down.
- - plane: Player spawns in a plane and gets flown to the destination, landing the plane.
-Every type has their own arguments but they all share one: the Name.
-
-# teleport EntryPoint
-- Name
-- Position with x,y,z and heading attributes
-<EntryPoint type="teleport">
-  <Name>Front</Name>
-  <Position x="81.6684" y="3596.262" z="39.72292" heading="5.505774"/>
-</EntryPoint>
-
-# rappel EntryPoint
-- Name
-- Destination (of the helicopter)
-- Helipad with attributes x,y,z
-<EntryPoint type="rappel">
-    <Name>Helicopter</Name>
-	<Helipad x="1770.297" y="3238.947" z="41.6537"/>
-    <Destination x="-23.28014" y="3666.868" z="54.55974"/>
-</EntryPoint>
-
-# plane EntryPoint
-- Name
-- PlaneSpawn: has attributes x,y,z, this is where the plane spawns.
-- PlaneHeading: plane heading when it spawns.
-- Approach: x,y,z of the position where the landing begins. This is generally in front of the airport, high in the air.
-- RunwayStart: start of the runway.
-- RunwayEnd: end of the runway. If the pilot overflies the runway, make the RunwayEnd in the middle of your runway.
-<EntryPoint type="plane">
-	<Name>Plane</Name>
-	<PlaneSpawn x="1775.372" y="3275.426" z="41.18471"/>
-	<PlaneHeading>180</PlaneHeading>
-	<Approach x="1775.372" y="3275.426" z="41.18471"/>
-	<RunwayStart x="1775.372" y="3275.426" z="41.18471"/>
-	<RunwayEnd x="1775.372" y="3275.426" z="41.18471"/>
-</EntryPoint>
-
-# Enemies
-This is where you define your enemies. Each line represents one enemy and has attributes x,y,z, and heading.
-By default, the mod will load all of your enemies. If you set a "max" attribute to Enemies, it will pick a random unique spawnpoint and create an enemy until it reaches that number.
-If you set it to "random", the mod will choose that number between maxpositions/2 and maxpositions.
-<Enemies max="1">
-	<Enemy x="96.46419" y="3750.036" z="40.71968" heading="70.04143"/>
-</Enemies>
-
-# Bomb Defusal Gamemode
-This section is completely optional. It defines the spawnpoints for the bomb in the Bomb Defusal gamemode. First define a list Bombs with a "time" attribute, which will define the bomb countdown in seconds.
-Then add spawnpoints inside with x,y,z and heading attributes. One will be chosen at random every round.
-<Bombs time="120">
-	<Bomb x="2141" y="1241" z="1512" heading="2412"/>
-	<Bomb x="2141" y="1241" z="1512" heading="2412"/>
-	<Bomb x="2141" y="1241" z="1512" heading="2412"/>
-</Bombs>
-
-# DecorativeVehicles
-This section is optional, but you have to include it, even if empty. Defines empty vehicles to spawn in the world.
-The spawn attribute indicates whether to spawn always (-1) or when the player chooses a specific entry point (0,1,2, etc).
-
-This vehicle will always spawn:
-<Vehicle model="Police" x="7.751782" y="3601.629" z="40.11242" heading="174.1431" spawn="-1"/>
-
-This vehicle will only spawn when the player chooses the first entry point:
-<Vehicle model="Dinghy2" x="181.5672" y="3660.32" z="30.12024" heading="45.93738" spawn="0"/>
-
-There are also optional attributes for your vehicles:
-- siren: true/false whether the siren should be on
-- doors: bitmask for which doors to open. the order is left-front, right-front, left-rear, right-rear
-	ex: "0011" would open the back doors, "1010" would open left doors and "1111" would open all doors.
-
-See BikersHideout.xml for an example reference.
+# Steps to follow
+1. Choose an area for your mission.
+2. Place a prop (any prop, trash bin recommended) in the air above the area. This will be the camera's position in the preview.
+2.1 [Optional] Place markers of type "DebugSphere" around the area, this will mark the gamearea. Any ped that leaves the area will be marked on the map.
+3. It's time to place the entry points. Place a marker of type "HorizontalCircleSkinny_Arrow" to place a teleport entry. Marker of type "ThickChevronUp" to place
+a Rappel entry, along with a marker of type "UpsideDownCone" for the helipad. For the Plane entry, you will need PlaneModel marker for the plane spawn point,
+VerticleCirlce marker for the approach point, ChevronUpx3 for the runway start and CheckeredFlagRect for the runway end.
+4. Place peds around the mission, these will be the enemies. The ped model doesn't matter.
+5. If you want to include the Bomb Defusal gamemode in your map, place barrel props around the map. This is optional.
+6. If you want to place decorative vehicles, just place them with the editor, this is optional as well.
+7. Save the map with the editor so you can re-edit the map anytime you want.
+8. Go to Map Editor > Create Map for External Mod > Create a NOOSE Mission and select it.
+9. Save the map again, this time indicate your mission's name.
+10. Go to scripts/NOOSEMissions and edit your newly created map with notepad and change values like bomb time and entry point names.
+11. If you want to make any changes, open the map editor, load the map you saved in step 7 and then repeat steps 8-10.
+12. You're done! Reload the mods to see your map in the game.
